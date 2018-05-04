@@ -1,0 +1,22 @@
+{
+  "name": "mws-restaurant-project",
+  "version": "1.0.0",
+  "description": "Restaurant Reviews App",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yper/mws-restaurant-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yper/mws-restaurant-project/issues"
+  },
+  "homepage": "https://github.com/yper/mws-restaurant-project#readme",
+  "dependencies": {
+    "idb": "^2.1.1"
+  }
+}
