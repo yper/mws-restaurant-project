@@ -1,6 +1,7 @@
 /**
  * Common database helper functions.
  */
+
 class DBHelper {
 
   /**
@@ -14,6 +15,14 @@ class DBHelper {
 
   }
 
+
+  static get dbPromise(){
+    return idb.open('restoDB',1,function(upgradeDB){
+      let restaurantObjectStore = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+    });
+  }
+
+
   /**
    * Fetch all restaurants.
    */
@@ -24,6 +33,17 @@ class DBHelper {
       if (xhr.status === 200) { // Got a success response from server!
 
         const restaurants = JSON.parse(xhr.responseText);
+
+        // store a copy of the restaurant data in indexeddb
+        console.log('[IDB] Ready to store restaurant data');
+        DBHelper.dbPromise.then(function(db){
+          let tx = db.transaction('restaurants','readwrite');
+          let restaurantObjectStore = tx.objectStore('restaurants');
+          restaurants.forEach(function(restaurant){
+            restaurantObjectStore.put(restaurant);
+          });            
+        });
+
 
         callback(null, restaurants);
       } else { // Oops!. Got an error from server.
