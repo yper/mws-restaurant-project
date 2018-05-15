@@ -67,14 +67,14 @@ self.addEventListener('fetch', function(event) {
 // Prior to fetching website content, we'll check whether there's an entry
 // in our cache. If zo, we load that one instead.
 self.addEventListener('fetch', function(event) {
-    console.log('Fetch event for ', event.request.url);
+    // console.log('[SW] Fetch event for ', event.request.url);
     event.respondWith(
       caches.match(event.request).then(function(response) {
         if (response) {
-          console.log('Found ', event.request.url, ' in our cache...');
+          // console.log('[SW] Found ', event.request.url, ' in our cache...');
           return response;
         }
-        console.log('New network request for ', event.request.url);
+        // console.log('[SW] New network request for ', event.request.url);
         return fetch(event.request)
       })
     );
