@@ -19,6 +19,7 @@ class DBHelper {
   static get dbPromise(){
     return idb.open('restoDB',1,function(upgradeDB){
       let restaurantObjectStore = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+      restaurantObjectStore.createIndex('id','id');
     });
   }
 
@@ -28,6 +29,9 @@ class DBHelper {
    */
   static fetchRestaurants(callback) {
     let xhr = new XMLHttpRequest();
+
+    console.log('[XHR] Restaurants getting fetched at ' + DBHelper.DATABASE_URL);
+
     xhr.open('GET', DBHelper.DATABASE_URL);
     xhr.onload = () => {
       if (xhr.status === 200) { // Got a success response from server!
@@ -41,16 +45,31 @@ class DBHelper {
           let restaurantObjectStore = tx.objectStore('restaurants');
           restaurants.forEach(function(restaurant){
             restaurantObjectStore.put(restaurant);
-          });            
+          });
         });
 
-
         callback(null, restaurants);
+
       } else { // Oops!. Got an error from server.
         const error = (`Request failed. Returned status of ${xhr.status}`);
         callback(error, null);
+
       }
     };
+    xhr.onreadystatechange=function() {
+      if ((xhr.readyState === 4) && (xhr.status !== 200)){  // done but not OK (!=200)
+        console.log('[XHR] Restaurants cannot be fetched at ' + DBHelper.DATABASE_URL + '. Revert to local copy instead!');
+
+        DBHelper.dbPromise.then(function(db){
+          let tx = db.transaction('restaurants');
+          let restaurantObjectStore = tx.objectStore('restaurants');
+          return restaurantObjectStore.getAll();
+        }).then(function(restaurants){
+          console.log('[XHR] Restaurants fetched from indexeddb');
+          callback(null, restaurants);
+        });
+      } 
+    }    
     xhr.send();
   }
 
