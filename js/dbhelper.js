@@ -194,10 +194,10 @@ class DBHelper {
   static imageUrlForRestaurant(restaurant) {
     
     if(restaurant.hasOwnProperty('photograph')){
-      return (`/img/${restaurant.photograph}.jpg`);
+      return (`/img/${restaurant.photograph}.webp`);
     } else {
       // Photo by Katlyn Giberson on Unsplash
-      return (`/img/no-picture.jpg`);
+      return (`/img/no-picture.webp`);
       
     }
   }

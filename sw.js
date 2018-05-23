@@ -1,7 +1,7 @@
 console.log('start sw');
 
 // When a new version of the cache is needed, we'll update the version in the name over here
-const cacheName = 'restaurant-review-v1';
+const cacheName = 'restaurant-review-v2';
 const filesToCache = [
     '/',
     '/index.html',
@@ -9,7 +9,6 @@ const filesToCache = [
     '/js/main.js',
     '/js/restaurant_info.js',
     '/css/styles.css',
-    '/data/restaurants.json',
     '/fonts/pt-sans-v9-latin-regular.eot',
     '/fonts/pt-sans-v9-latin-regular.svg',
     '/fonts/pt-sans-v9-latin-regular.ttf',
@@ -44,7 +43,43 @@ const filesToCache = [
     '/img/9-670px.jpg',
     '/img/10-247px.jpg',
     '/img/10-451px.jpg',
-    '/img/10-670px.jpg'
+    '/img/10-670px.jpg',
+    '/img/no-picture-247px.jpg',
+    '/img/no-picture-451px.jpg',
+    '/img/no-picture-670px.jpg',
+    '/img/1-247px.webp',
+    '/img/1-451px.webp',
+    '/img/1-670px.webp',
+    '/img/2-247px.webp',
+    '/img/2-451px.webp',
+    '/img/2-670px.webp',
+    '/img/3-247px.webp',
+    '/img/3-451px.webp',
+    '/img/3-670px.webp',
+    '/img/4-247px.webp',
+    '/img/4-451px.webp',
+    '/img/4-670px.webp',
+    '/img/5-247px.webp',
+    '/img/5-451px.webp',
+    '/img/5-670px.webp',
+    '/img/6-247px.webp',
+    '/img/6-451px.webp',
+    '/img/6-670px.webp',
+    '/img/7-247px.webp',
+    '/img/7-451px.webp',
+    '/img/7-670px.webp',
+    '/img/8-247px.webp',
+    '/img/8-451px.webp',
+    '/img/8-670px.webp',
+    '/img/9-247px.webp',
+    '/img/9-451px.webp',
+    '/img/9-670px.webp',
+    '/img/10-247px.webp',
+    '/img/10-451px.webp',
+    '/img/10-670px.webp',
+    '/img/no-picture-247px.webp',
+    '/img/no-picture-451px.webp',
+    '/img/no-picture-670px.webp'
   ];
 
 // when installing this service worker, we'll cache all resources
