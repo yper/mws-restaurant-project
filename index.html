@@ -4,6 +4,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+  <link rel="manifest" href="manifest.json" />
+  <link rel="shortcut icon" href="img/icons/icon-72x72.png" type="image/x-icon" />
+  <meta name="theme-color" content="#f58500">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="RestoReview">
+  <link rel="apple-touch-startup-image" href="img/icons/icon-512x512.png">
+  <link rel="apple-touch-icon" href="img/icons/icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="img/icons/icon-152x152.png">
+
   <link rel="stylesheet" href="css/styles.css">
   <title>Restaurant Reviews</title>
 </head>
@@ -36,7 +46,7 @@
   <script type="text/javascript" charset="utf-8" src="node_modules/idb/lib/idb.js"></script>
   <script type="text/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="text/javascript" charset="utf-8" src="js/register-sw.js"></script>
-  <script type="text/javascript" charset="utf-8" src="js/main.js"></script>
+  <script async defer type="text/javascript" charset="utf-8" src="js/main.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&libraries=places&callback=initMap"></script>
 
 
@@ -48,3 +58,9 @@
 </body>
 
 </html>
+
+<!-- 
+  ATTRIB:
+  App icon: http://freeiconshop.com/icon/eat-icon-flat/ 
+  manifest.json: https://app-manifest.firebaseapp.com/
+-->
