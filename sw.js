@@ -1,7 +1,7 @@
 console.log('start sw');
 
 // When a new version of the cache is needed, we'll update the version in the name over here
-const cacheName = 'restaurant-review-v2';
+const cacheName = 'restaurant-review-v3';
 const filesToCache = [
     '/',
     '/index.html',
