@@ -160,6 +160,7 @@ nav h1 a {
   border: 2px solid #f58500;
   border-left: 0;
   border-right: 0;
+  background-image: url(/img/map-placeholder.webp);
 }
 /* ====================== Restaurant Filtering ====================== */
 
@@ -469,6 +470,12 @@ nav h1 a {
     letter-spacing: 1rem;
   }   
 } 
+
+.offscreen { 
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);  
+}
 
 /* pt-sans-regular - latin */
 @font-face {

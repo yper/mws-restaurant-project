@@ -216,3 +216,26 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 }
+
+/* 
+* Detect DOM ready - https://stackoverflow.com/a/7053197 
+*/
+function pageReady(callback){
+  // in case the document is already rendered
+  if (document.readyState!='loading') callback();
+  // modern browsers
+  else if (document.addEventListener) document.addEventListener('DOMContentLoaded', callback);
+  // IE <= 8
+  else document.attachEvent('onreadystatechange', function(){
+      if (document.readyState=='complete') callback();
+  });
+}
+
+pageReady(function(){
+  console.log('Page is ready, let\'s throw in some javascript');
+
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&&libraries=places&callback=initMap';
+  document.body.appendChild(script);
+});

@@ -32,9 +32,11 @@
     <section>
       <div class="filter-options nav-filterwait">
         <h2>Filter Results</h2>
+        <label for="neighborhoods-select" class="offscreen">Select a neighborhood</label>
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
+        <label for="neighborhoods-select" class="offscreen">Select a cuisine</label>
         <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
@@ -47,7 +49,7 @@
   <script type="text/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="text/javascript" charset="utf-8" src="js/register-sw.js"></script>
   <script async defer type="text/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&libraries=places&callback=initMap"></script>
+  <!--<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&libraries=places&callback=initMap"></script>-->
 
 
   <footer>
