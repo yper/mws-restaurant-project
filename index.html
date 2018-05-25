@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="img/icons/icon-72x72.png">
   <link rel="apple-touch-icon" sizes="152x152" href="img/icons/icon-152x152.png">
 
-  <link rel="stylesheet" href="css/styles.css">
+  <link defer rel="stylesheet" href="css/styles.css">
   <title>Restaurant Reviews</title>
 </head>
 
@@ -36,7 +36,7 @@
         <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
-        <label for="neighborhoods-select" class="offscreen">Select a cuisine</label>
+        <label for="cuisines-select" class="offscreen">Select a cuisine</label>
         <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
@@ -49,9 +49,8 @@
   <script type="text/javascript" charset="utf-8" src="js/dbhelper.js"></script>
   <script type="text/javascript" charset="utf-8" src="js/register-sw.js"></script>
   <script async defer type="text/javascript" charset="utf-8" src="js/main.js"></script>
-  <!--<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&libraries=places&callback=initMap"></script>-->
-
-
+  <script async defer type="text/javascript" charset="utf-8" src="js/common.js"></script>
+  
   <footer>
     Copyright (c) 2018 <a href="/">Restaurant Reviews</a><br>
     All Rights Reserved.
@@ -65,4 +64,5 @@
   ATTRIB:
   App icon: http://freeiconshop.com/icon/eat-icon-flat/ 
   manifest.json: https://app-manifest.firebaseapp.com/
+  Lazy loading: https://www.robinosborne.co.uk/2016/05/16/lazy-loading-images-dont-rely-on-javascript/
 -->
