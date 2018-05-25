@@ -4,7 +4,8 @@
 /* 
   COLOR VALUES 
   #fdfdfd - background grey
-  #f58500 - orange
+  #f58500 - rgb(245, 133, 0) - orange
+  #185D8C - blue filter background
 */
 
 
@@ -88,7 +89,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 
 footer {
   background-color: #444;
-  color: #aaa;
+  color: #fff;
   font-size: 8pt;
   letter-spacing: 1px;
   padding: 25px;
@@ -178,7 +179,7 @@ nav h1 a {
 
 .filter-options {
   width: 100%;
-  background-color: #3397DB;
+  background-color: #185D8C;
   align-items: center;
 }
 .filter-options h2 {
@@ -225,7 +226,7 @@ nav h1 a {
   border-bottom: 2px solid #f58500;
 }
 #restaurants-list li h1 {
-  color: #f18200;
+  color: #B36200;
   font-family: Arial,sans-serif;
   font-size: 14pt;
   font-weight: 200;
@@ -268,9 +269,9 @@ nav h1 a {
   min-height: 3rem;
   min-width: 3rem;
   padding: 1rem;
-  background-color: #f58500;
+  background-color: rgba(245, 133, 0, 0.4);;
   border-radius: 1rem 0 1rem 0;
-  color: #fff;
+  color: #000;
   line-height: 4rem;
 }
 
@@ -391,7 +392,7 @@ h1 {
   font-size: 1.8rem;
   font-weight: 200;
   text-transform: uppercase;
-  color: #f58500;
+  color: #B36200;
   /*text-shadow: 2px 2px 4px #999;*/
 }
 
