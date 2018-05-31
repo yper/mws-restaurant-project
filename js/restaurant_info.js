@@ -9,15 +9,24 @@ window.initMap = () => {
     if (error) { // Got an error!
       console.log(error);
     } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
+      document.getElementById('show-map').addEventListener('click', (function () {
+        self.map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 16,
+          center: restaurant.latlng,
+          scrollwheel: false
+        });
+
+        DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+
+      }));
       fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      
     }
   });
+}
+
+function initPage(){
+  
 }
 
 /**

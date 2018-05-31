@@ -19,8 +19,9 @@ pageReady(function(){
   script.type = 'text/javascript';
   script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&&libraries=places&callback=initMap';
   document.body.appendChild(script);
-  updateRestaurants();
+  initPage();   // carry out page specific initializations, found in js file of that page
 });
+
 
 /*
 * Lazy loading - Based on https://www.robinosborne.co.uk/2016/05/16/lazy-loading-images-dont-rely-on-javascript/
@@ -53,7 +54,9 @@ function lazyLoad(){
               lazy[i].setAttribute("srcset", lazy[i].getAttribute('data-srcset'));
               lazy[i].removeAttribute('data-srcset');
           }
-          console.log('[LL] Image loaded');
+          console.log('[LL] Image loaded');        
+        } else {
+            console.log(`[LL] Image checked but not in viewport...`);
         }
     }
 

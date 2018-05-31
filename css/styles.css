@@ -162,7 +162,24 @@ nav h1 a {
   border-left: 0;
   border-right: 0;
   background-image: url(/img/map-placeholder.webp);
+  text-align: center;
 }
+
+#map #show-map {
+  background-color: rgba(245, 133, 0, 0.2);
+  width: 100%;
+  height: 100%;
+  border: 0;
+  font-size: 2.1rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#map #show-map:hover {
+  background-color: rgba(245, 133, 0, 0.4);
+}
+
+
 /* ====================== Restaurant Filtering ====================== */
 
 .nav-filter {
@@ -263,16 +280,16 @@ nav h1 a {
 .buttonbox {
   text-align: right; 
   margin: 1rem;
+  padding: 1rem 0;
 }
 
 .button {
   min-height: 3rem;
   min-width: 3rem;
   padding: 1rem;
-  background-color: rgba(245, 133, 0, 0.4);;
+  background-color: rgba(245, 133, 0, 0.4);
   border-radius: 1rem 0 1rem 0;
   color: #000;
-  line-height: 4rem;
 }
 
 .button:focus,

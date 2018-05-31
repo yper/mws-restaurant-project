@@ -1,12 +1,14 @@
 console.log('start sw');
 
 // When a new version of the cache is needed, we'll update the version in the name over here
-const cacheName = 'restaurant-review-v3';
+const cacheName = 'restaurant-review-v4';
 const filesToCache = [
     '/',
     '/index.html',
     '/restaurant.html',
     '/js/main.js',
+    '/js/common.js',
+    '/js/dbhelper.js',
     '/js/restaurant_info.js',
     '/css/styles.css',
     '/fonts/pt-sans-v9-latin-regular.eot',
@@ -14,39 +16,6 @@ const filesToCache = [
     '/fonts/pt-sans-v9-latin-regular.ttf',
     '/fonts/pt-sans-v9-latin-regular.woff',
     '/fonts/pt-sans-v9-latin-regular.woff2',
-    '/img/1-247px.jpg',
-    '/img/1-451px.jpg',
-    '/img/1-670px.jpg',
-    '/img/2-247px.jpg',
-    '/img/2-451px.jpg',
-    '/img/2-670px.jpg',
-    '/img/3-247px.jpg',
-    '/img/3-451px.jpg',
-    '/img/3-670px.jpg',
-    '/img/4-247px.jpg',
-    '/img/4-451px.jpg',
-    '/img/4-670px.jpg',
-    '/img/5-247px.jpg',
-    '/img/5-451px.jpg',
-    '/img/5-670px.jpg',
-    '/img/6-247px.jpg',
-    '/img/6-451px.jpg',
-    '/img/6-670px.jpg',
-    '/img/7-247px.jpg',
-    '/img/7-451px.jpg',
-    '/img/7-670px.jpg',
-    '/img/8-247px.jpg',
-    '/img/8-451px.jpg',
-    '/img/8-670px.jpg',
-    '/img/9-247px.jpg',
-    '/img/9-451px.jpg',
-    '/img/9-670px.jpg',
-    '/img/10-247px.jpg',
-    '/img/10-451px.jpg',
-    '/img/10-670px.jpg',
-    '/img/no-picture-247px.jpg',
-    '/img/no-picture-451px.jpg',
-    '/img/no-picture-670px.jpg',
     '/img/1-247px.webp',
     '/img/1-451px.webp',
     '/img/1-670px.webp',
@@ -100,7 +69,7 @@ self.addEventListener('fetch', function(event) {
 
 
 // Prior to fetching website content, we'll check whether there's an entry
-// in our cache. If zo, we load that one instead.
+// in our cache. If so, we load that one instead.
 self.addEventListener('fetch', function(event) {
     // console.log('[SW] Fetch event for ', event.request.url);
     event.respondWith(

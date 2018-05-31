@@ -5,20 +5,12 @@ var map
 var markers = []
 
 /**
- * Fetch neighborhoods and cuisines as soon as the page is loaded.
- */
-document.addEventListener('DOMContentLoaded', (event) => {
-  fetchNeighborhoods();
-  fetchCuisines();
-});
-
-/**
  * Fetch all neighborhoods and set their HTML.
  */
 fetchNeighborhoods = () => {
   DBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
-      console.error(error);
+      console.log(error);
     } else {
       self.neighborhoods = neighborhoods;
       fillNeighborhoodsHTML();
@@ -71,15 +63,18 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
-  let loc = {
-    lat: 40.722216,
-    lng: -73.987501
-  };
-  self.map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: loc,
-    scrollwheel: false
-  });
+  document.getElementById('show-map').addEventListener('click', (function () {
+    let loc = {
+      lat: 40.722216,
+      lng: -73.987501
+    };
+    self.map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: loc,
+      scrollwheel: false
+    });
+    addMarkersToMap();
+  }));
   updateRestaurants();
 }
 
@@ -104,6 +99,7 @@ updateRestaurants = () => {
       fillRestaurantsHTML();
     }
   })
+
 }
 
 /**
@@ -129,6 +125,12 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
   });
+
+  // lazyload images again
+  setLazy();
+  lazyLoad();
+  
+  // add markers to the map
   addMarkersToMap();
 }
 
@@ -202,70 +204,22 @@ createRestaurantHTML = (restaurant) => {
  * Add markers for current restaurants to the map.
  */
 addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
+  if(typeof(google)!= 'undefined'){
+    restaurants.forEach(restaurant => {
+      // Add marker to the map
+      const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
+      google.maps.event.addListener(marker, 'click', () => {
+        window.location.href = marker.url
+      });
+      self.markers.push(marker);
     });
-    self.markers.push(marker);
-  });
+  } else {
+    console.log('google undefined');
+  }
 }
 
-/*
-* Lazy loading - Based on https://www.robinosborne.co.uk/2016/05/16/lazy-loading-images-dont-rely-on-javascript/
-*/
-registerListener('load', setLazy);
-registerListener('load', lazyLoad);
-registerListener('scroll', lazyLoad);
-
-var lazy = [];
-
-function setLazy(){
-    lazy = document.getElementsByClassName('lazy');
-    console.log('[LL] Found ' + lazy.length + ' lazy images');
-} 
-
-function cleanLazy(){
-  lazy = Array.prototype.filter.call(lazy, function(l){ return l.getAttribute('data-src');});
-}
-
-function lazyLoad(){
-    for(var i=0; i<lazy.length; i++){
-        if(isInViewport(lazy[i])){
-            // swap src
-            if (lazy[i].getAttribute('data-src')){
-                lazy[i].src = lazy[i].getAttribute('data-src');
-                lazy[i].removeAttribute('data-src');
-            }
-            // swap srcset
-            if (lazy[i].getAttribute('data-srcset')){
-              lazy[i].setAttribute("srcset", lazy[i].getAttribute('data-srcset'));
-              lazy[i].removeAttribute('data-srcset');
-          }
-          console.log('[LL] Image loaded');
-        }
-    }
-
-    cleanLazy();
-    
-}
-
-function isInViewport(el){
-    var rect = el.getBoundingClientRect();
-    
-    return (
-        rect.bottom >= 0 && 
-        rect.right >= 0 && 
-        rect.top <= (window.innerHeight || document.documentElement.clientHeight) && 
-        rect.left <= (window.innerWidth || document.documentElement.clientWidth)
-     );
-}
-
-function registerListener(event, func) {
-    if (window.addEventListener) {
-        window.addEventListener(event, func)
-    } else {
-        window.attachEvent('on' + event, func)
-    }
+function initPage(){
+  updateRestaurants();
+  fetchNeighborhoods();
+  fetchCuisines();
 }
