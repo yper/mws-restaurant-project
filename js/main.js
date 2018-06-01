@@ -1,8 +1,8 @@
 let restaurants,
   neighborhoods,
   cuisines
-var map
-var markers = []
+let map
+let markers = []
 
 /**
  * Fetch all neighborhoods and set their HTML.
