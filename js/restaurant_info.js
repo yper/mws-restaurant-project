@@ -19,6 +19,15 @@ window.initMap = () => {
         DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
 
       }));
+
+      // get restaurant reviews fetched and displayed
+      fetchReviewsFromRid((error, reviews) => {
+        if (error) {
+          console.log(error);
+        }   
+      });
+
+      // get the breadcrumbs up and running
       fillBreadcrumb();
       
     }
@@ -53,6 +62,9 @@ fetchRestaurantFromURL = (callback) => {
     });
   }
 }
+
+
+
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -99,7 +111,22 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  //fillReviewsHTML();
+}
+
+// get all reviews for the current restaurant
+fetchReviewsFromRid = (callback) => {
+  const rid = self.restaurant.id;
+  DBHelper.fetchReviewsByRestaurantId(rid, (error, reviews) => {
+    console.log('[IDB] Get reviews for this restaurant');
+    self.restaurant.reviews = reviews;
+    if (!reviews) {
+      console.log(error); // not really an error, just no reviews yet
+      return;
+    }
+    fillReviewsHTML();
+    callback(null, reviews)
+  });
 }
 
 /**
@@ -157,8 +184,11 @@ createReviewHTML = (review) => {
   name.className = 'review-name';
   name.innerHTML = review.name;
   header.appendChild(name);
+
+  // createdAt is a timestamp, let's make it more human readable before outputting
+  let humanDate = new Date(review.createdAt).toDateString();
   const date = document.createElement('span');
-  date.innerHTML = review.date;
+  date.innerHTML = humanDate;
   date.className = 'review-date';
   header.appendChild(date);
   div.appendChild(header);

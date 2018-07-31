@@ -9,20 +9,23 @@ class DBHelper {
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    
     const host = window.location.host
     return `http://localhost:1337/restaurants`;
 
   }
 
+  static get REVIEWS_URL(){
+    return `http://localhost:1337/reviews`;
+  }
 
   static get dbPromise(){
     return idb.open('restoDB',1,function(upgradeDB){
       let restaurantObjectStore = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
       restaurantObjectStore.createIndex('id','id');
+      let reviewsObjectStore = upgradeDB.createObjectStore('reviews', {keyPath: 'id'});
+      reviewsObjectStore.createIndex('id','id');
     });
   }
-
 
   /**
    * Fetch all restaurants.
@@ -217,4 +220,68 @@ class DBHelper {
     return marker;
   }
 
+
+
+  // fetch all reviews
+  static fetchReviews(callback) {
+    let xhr = new XMLHttpRequest();
+
+    console.log('[XHR] Reviews getting fetched at ' + DBHelper.REVIEWS_URL);
+
+    xhr.open('GET', DBHelper.REVIEWS_URL);
+    xhr.onload = () => {
+      if (xhr.status === 200) { // Got a success response from server!
+
+        const reviews = JSON.parse(xhr.responseText);
+
+        // store a copy of the restaurant reviews data in indexeddb
+        console.log('[IDB] Ready to store reviews data');
+        DBHelper.dbPromise.then(function(db){
+          let tx = db.transaction('reviews','readwrite');
+          let reviewsObjectStore = tx.objectStore('reviews');
+          reviews.forEach(function(review){
+            reviewsObjectStore.put(review);
+          });
+        });
+
+        callback(null, reviews);
+
+      } else { // Oops!. Got an error from server.
+        const error = (`Request failed. Returned status of ${xhr.status}`);
+        callback(error, null);
+
+      }
+    };
+    xhr.onreadystatechange=function() {
+      if ((xhr.readyState === 4) && (xhr.status !== 200)){  // done but not OK (!=200)
+        console.log('[XHR] Reviews cannot be fetched at ' + DBHelper.REVIEWS_URL + '. Revert to local copy instead!');
+
+        DBHelper.dbPromise.then(function(db){
+          let tx = db.transaction('reviews');
+          let reviewsObjectStore = tx.objectStore('reviews');
+          return reviewsObjectStore.getAll();
+        }).then(function(reviews){
+          console.log('[XHR] Reviews fetched from indexeddb');
+          callback(null, reviews);
+        });
+      } 
+    }    
+    xhr.send();
+  }
+
+  /**
+   * Fetch restaurant reviews by restaurant ID with proper error handling.
+   */
+  static fetchReviewsByRestaurantId(rid, callback) {
+    // Fetch all restaurants  with proper error handling
+    DBHelper.fetchReviews((error, reviews) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        const results = reviews.filter(r => r.restaurant_id == rid);
+        callback(null, results);
+      }
+    });
+  }
+  
 }
