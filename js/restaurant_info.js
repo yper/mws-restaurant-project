@@ -110,8 +110,18 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  //fillReviewsHTML();
+  
+  const favorite = document.getElementById('restaurant-favorite');
+  let favoriteIcon = "far fa-star fa-3x";
+  let favoriteText = "add to<br />your favorites";
+  let favoriteAriaPressed = "false";
+  if(restaurant.is_favorite){
+    favoriteIcon = "fas fa-star fa-3x";
+    favoriteText = "one of<br />your favorites";
+    favoriteAriaPressed = "true";
+  }
+  favorite.innerHTML = '<button id="toggle-favorite" aria-role="button" aria-pressed="'+favoriteAriaPressed+'"><i class="'+favoriteIcon+'"></i>'+favoriteText+'</button>';
+
 }
 
 // get all reviews for the current restaurant
