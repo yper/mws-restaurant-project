@@ -334,10 +334,10 @@ nav h1 a {
   margin-bottom: 1.4rem;
 }
 
-#restaurant-container, #reviews-container {
-  padding: 1rem;
-}
-#reviews-container {
+#restaurant-container, 
+#reviews-container,
+#addreview-container,
+#favorite-container {
   padding: 1rem;
 }
 
@@ -401,6 +401,32 @@ nav h1 a {
   text-transform: uppercase;
   border-radius: 5%;
   color: #fff;
+}
+
+#addreview-container .review {
+  padding: 2rem;
+}
+
+#addreview-container #review-author,
+#addreview-container #review-rating,
+#addreview-container #review-comment,
+#addreview-container #review-button
+ {
+  width: 100%;
+  font-size: 1.9rem;
+  padding: 0.5rem;
+  font-family: Arial, Helvetica, sans-serif;
+  border-width: 2px;
+  border-style: inset;
+  border-color: initial;
+  border-image: initial;
+}
+
+#addreview-container #review-button,
+#favorite-container button {
+  background-color: #f58500;
+  color: #fff;
+  border: 1px solid #444;
 }
 
 /* Breakpoints */

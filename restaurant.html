@@ -62,6 +62,47 @@
         <div id="reviews-list" class="flexbox-container"></div>
       </section>
 
+      <!-- New review form -->
+      <section id="addreview-container">
+        <div class="review">
+
+          <form>
+            <h3>Add your review</h3>
+            <div>
+              <div style="width: 79%; float: left;">
+                <label for="review-author">Your name:</label>
+                <input type="text" name="review-author" id="review-author" placeholder="Your name">
+              </div>
+
+              <div style="width: 19%; float: right;">
+                <label for="review-rating">Rating:</label>
+                <select name="review-rating" id="review-rating">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              &nbsp;
+            </div>
+
+            <div style"width: 100%; clear: both;">
+              <label for="review-comment">Review:</label>
+              <textarea name="review-comment" id="review-comment" placeholder="Your review"></textarea>
+            </div>
+            <div>
+              <button type="submit" id="review-button">Add your review</button>
+            </div>
+        </form>
+        </div>
+      </section>
+
+      <section id="favorite-container">
+        <button>Mark as favorite</button>
+      </section>
+
     </main>
 
     <footer>
