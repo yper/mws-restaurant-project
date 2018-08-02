@@ -32,10 +32,18 @@ window.initMap = () => {
 
 
       // favorite button
-      document.getElementById('toggle-favorite').addEventListener("click", function(){
+      let favButton = document.getElementById('toggle-favorite');
+      favButton.addEventListener("click", function(){
         console.log('Favorite button clicked');
-        DBHelper.toggleFavoriteRestaurant(restaurant.id, true, logError);
-        fillRestaurantHTML();
+        console.log('Favorite was '+restaurant.is_favorite);
+        if(restaurant.is_favorite==='false'){
+          restaurant.is_favorite = 'true';
+        } else {
+          restaurant.is_favorite = 'false';
+        }
+        console.log('Favorite is now '+restaurant.is_favorite);
+        DBHelper.toggleFavoriteRestaurant(restaurant, logError);
+        favButton.setAttribute('aria-pressed', restaurant.is_favorite);
       })
 
       
@@ -61,6 +69,7 @@ fetchRestaurantFromURL = (callback) => {
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+      if(typeof(restaurant.is_favorite)===undefined){ restaurant.is_favorite = false; }
       self.restaurant = restaurant;
       if (!restaurant) {
         console.log(error);
@@ -120,16 +129,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   
+console.log(restaurant);
+
   const favorite = document.getElementById('restaurant-favorite');
-  let favoriteIcon = "far fa-star fa-3x";
-  let favoriteText = "add to<br />your favorites";
-  let favoriteAriaPressed = "false";
-  if(restaurant.is_favorite){
-    favoriteIcon = "fas fa-star fa-3x";
-    favoriteText = "one of<br />your favorites";
-    favoriteAriaPressed = "true";
+  let favoriteAriaPressed = "true";
+  if(restaurant.is_favorite!==true){
+    favoriteAriaPressed = "false";
   }
-  favorite.innerHTML = '<button id="toggle-favorite" aria-role="button" aria-pressed="'+favoriteAriaPressed+'"><i class="'+favoriteIcon+'"></i>'+favoriteText+'</button>';
+  favorite.innerHTML = '<button id="toggle-favorite" aria-role="button" aria-pressed="'+favoriteAriaPressed+'"><br></button>';
 
 }
 

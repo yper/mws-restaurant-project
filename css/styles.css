@@ -347,6 +347,26 @@ nav h1 a {
   border-bottom-left-radius: 1rem;
 }
 
+#restaurant-favorite #toggle-favorite::before {
+  content: '\f005';
+  font-family: "Font Awesome 5 Free"; 
+  font-weight: 400; /* regular icon */
+  font-size: 4rem;
+}
+
+#restaurant-favorite #toggle-favorite[aria-pressed="true"]::before {
+  font-weight: 900; /* solid icon */
+}
+
+#restaurant-favorite #toggle-favorite::after {
+  content: 'add to\Ayour favorites';
+  white-space: pre-wrap; /* to get line breaks to work in content */
+}
+
+#restaurant-favorite #toggle-favorite[aria-pressed="true"]::after {
+  content: "one of\Ayour favorites";
+}
+
 #restaurant-cuisine,
 #restaurant-address {
   margin-bottom: 1.4rem;

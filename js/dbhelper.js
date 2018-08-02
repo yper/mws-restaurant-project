@@ -19,7 +19,7 @@ class DBHelper {
   }
 
   static get dbPromise(){
-    return idb.open('restoDB',1,function(upgradeDB){
+    return idb.open('restoDB',2,function(upgradeDB){
       let restaurantObjectStore = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
       restaurantObjectStore.createIndex('id','id');
       let reviewsObjectStore = upgradeDB.createObjectStore('reviews', {keyPath: 'id'});
@@ -43,14 +43,9 @@ class DBHelper {
 
         // store a copy of the restaurant data in indexeddb
         console.log('[IDB] Ready to store restaurant data');
-        DBHelper.dbPromise.then(function(db){
-          let tx = db.transaction('restaurants','readwrite');
-          let restaurantObjectStore = tx.objectStore('restaurants');
-          restaurants.forEach(function(restaurant){
-            restaurantObjectStore.put(restaurant);
-          });
+        restaurants.forEach(function(restaurant){
+          DBHelper.storeRestaurantInIdb(restaurant);
         });
-
         callback(null, restaurants);
 
       } else { // Oops!. Got an error from server.
@@ -59,6 +54,7 @@ class DBHelper {
 
       }
     };
+
     xhr.onreadystatechange=function() {
       if ((xhr.readyState === 4) && (xhr.status !== 200)){  // done but not OK (!=200)
         console.log('[XHR] Restaurants cannot be fetched at ' + DBHelper.DATABASE_URL + '. Revert to local copy instead!');
@@ -220,7 +216,17 @@ class DBHelper {
     return marker;
   }
 
-
+  /**
+   * Add or update restaurant in local IndexedDB storage
+   */
+  static storeRestaurantInIdb(restaurant) {
+		return DBHelper.dbPromise.then(function(db) {
+      let tx = db.transaction('restaurants', 'readwrite');
+      let restaurantObjectStore = tx.objectStore('restaurants');
+      restaurantObjectStore.put(restaurant);
+      return tx.complete;
+    });
+  }
 
   // fetch all reviews
   static fetchReviews(callback) {
@@ -287,19 +293,35 @@ class DBHelper {
   /**
    * Mark or unmark a restaurant as favorite
    */
-  static toggleFavoriteRestaurant(rid, favorite, callback){
-    fetch('http://localhost:1337/restaurants/' + rid + '/?is_favorite=' + favorite, {
-      method: 'PUT'
-    }).then(function(data){
-      return data.json();
-    }).then(function(response){
-      console.log(response);
-      // save changes in local db
-      // alter button icon, text and aria data
-    }).catch(function(err) {
-      const error = (`Request failed. Error : ${err}`);
-      callback(error, null);
-    });
+  static toggleFavoriteRestaurant(restaurant, callback){
+
+    console.log(restaurant);
+
+    // update local storage first
+    // restaurant.is_favorite has allready been updated
+    DBHelper.storeRestaurantInIdb(restaurant);
+
+    // if we're online (check happens in common.js!), we'll have 
+    // a try at changing the restaurant favorite value at the remote
+    // server as well
+    if(online){
+      fetch('http://localhost:1337/restaurants/' + restaurant.id + '/?is_favorite=' + restaurant.is_favorite, {
+        method: 'PUT'
+      }).then(function(data){
+        return data.json();
+      }).then(function(restaurant){
+        //console.log(restaurant);
+        console.log('Favorite stored at remote server as well!');
+      }).catch(function(err) {
+        const error = (`Request failed. Error : ${err}`);
+        callback(error, null);
+      });
+    } else {
+      console.log("We're offline, so altering the favorite restaurant remotely will have to wait...");
+    }
+
+    // alter button icon, text and aria data OR reload the page?
+
   }
 
 
