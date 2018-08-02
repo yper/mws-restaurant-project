@@ -1,7 +1,7 @@
 console.log('start sw');
 
 // When a new version of the cache is needed, we'll update the version in the name over here
-const cacheName = 'restaurant-review-v4';
+const cacheName = 'restaurant-review-v6';
 const filesToCache = [
     '/',
     '/index.html',
@@ -48,7 +48,8 @@ const filesToCache = [
     '/img/10-670px.webp',
     '/img/no-picture-247px.webp',
     '/img/no-picture-451px.webp',
-    '/img/no-picture-670px.webp'
+    '/img/no-picture-670px.webp',
+    '/node_modules/idb/lib/idb.js'
   ];
 
 // when installing this service worker, we'll cache all resources

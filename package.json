@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/yper/mws-restaurant-project#readme",
   "dependencies": {
-    "idb": "^2.1.1"
+    "idb": "^2.1.3"
   }
 }
