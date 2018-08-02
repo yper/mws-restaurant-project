@@ -283,5 +283,25 @@ class DBHelper {
       }
     });
   }
-  
+ 
+  /**
+   * Mark or unmark a restaurant as favorite
+   */
+  static toggleFavoriteRestaurant(rid, favorite, callback){
+    fetch('http://localhost:1337/restaurants/' + rid + '/?is_favorite=' + favorite, {
+      method: 'PUT'
+    }).then(function(data){
+      return data.json();
+    }).then(function(response){
+      console.log(response);
+      // save changes in local db
+      // alter button icon, text and aria data
+    }).catch(function(err) {
+      const error = (`Request failed. Error : ${err}`);
+      callback(error, null);
+    });
+  }
+
+
+
 }

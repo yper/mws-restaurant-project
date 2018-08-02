@@ -29,6 +29,15 @@ window.initMap = () => {
 
       // get the breadcrumbs up and running
       fillBreadcrumb();
+
+
+      // favorite button
+      document.getElementById('toggle-favorite').addEventListener("click", function(){
+        console.log('Favorite button clicked');
+        DBHelper.toggleFavoriteRestaurant(restaurant.id, true, logError);
+        fillRestaurantHTML();
+      })
+
       
     }
   });
@@ -245,4 +254,8 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function logError(error){
+  console.log(error);
 }
