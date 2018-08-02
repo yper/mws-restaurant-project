@@ -1,3 +1,13 @@
+/**
+ * Detect whether we're having access to the internet
+ */
+let online = navigator.onLine;
+if(online){ 
+  console.log("There's online access!"); 
+} else {
+  console.log("Internet connection seems down, enabling offline mode!")
+}
+
 /* 
 * Detect DOM ready - https://stackoverflow.com/a/7053197 
 */
