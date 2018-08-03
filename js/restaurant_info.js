@@ -48,6 +48,36 @@ window.initMap = () => {
         favButton.setAttribute('aria-pressed', restaurant.is_favorite);
       })
 
+      // add review form
+      let addReviewForm = document.getElementById('addReview');
+      addReviewForm.addEventListener('submit', function(e){
+        e.preventDefault(); // don't just submit
+
+        let newReview = {
+          comments: document.getElementById('review-comments').value,
+          name: document.getElementById('review-name').value,
+          rating: document.getElementById('review-rating').value,
+          restaurant_id: self.restaurant.id,
+          createdAt: Date.now(),
+          updatedAt: Date.now()
+        }
+
+        // add in local indexeddb
+        DBHelper.storeReviewInIdb(newReview)
+        .then(function(data){
+          console.log(data);
+          return data;
+        }).then(function(review){
+          console.log('[IDB] New review added');
+          //self.restaurant.reviews.push(review);
+          DBHelper.storeReviewRemote(newReview,logError);
+
+        }).catch(function(err) {
+          const error = (`Request failed. Error : ${err}`);
+          console.log(error);
+        });
+
+      })
       
     }
   });
@@ -130,8 +160,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  
-console.log(restaurant);
 
   const favorite = document.getElementById('restaurant-favorite');
   let favoriteAriaPressed = "true";

@@ -22,7 +22,7 @@ class DBHelper {
     return idb.open('restoDB',2,function(upgradeDB){
       let restaurantObjectStore = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
       restaurantObjectStore.createIndex('id','id');
-      let reviewsObjectStore = upgradeDB.createObjectStore('reviews', {keyPath: 'id'});
+      let reviewsObjectStore = upgradeDB.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
       reviewsObjectStore.createIndex('id','id');
     });
   }
@@ -64,7 +64,7 @@ class DBHelper {
           let restaurantObjectStore = tx.objectStore('restaurants');
           return restaurantObjectStore.getAll();
         }).then(function(restaurants){
-          console.log('[XHR] Restaurants fetched from indexeddb');
+          console.log('[IDB] Restaurants fetched from indexeddb');
           callback(null, restaurants);
         });
       } 
@@ -228,6 +228,44 @@ class DBHelper {
     });
   }
 
+  /**
+   * Add or update restaurant review in local IndexedDB storage
+   */
+  static storeReviewInIdb(review) {
+		return DBHelper.dbPromise.then(function(db) {
+      let tx = db.transaction('reviews', 'readwrite');
+      let reviewObjectStore = tx.objectStore('reviews');
+      reviewObjectStore.put(review);
+      return tx.complete;
+    });
+  }
+
+  /**
+   * Store a review on remote server
+   * 
+   * NOTE: server returns only 30 reviews in total, so to check
+   * whether new entry was added, there needs to be some changes
+   * applied -> https://github.com/udacity/mws-restaurant-stage-3/issues/13
+   */
+  static storeReviewRemote(newReview, callback){
+    if(online){
+      fetch('http://localhost:1337/reviews/', {
+        method: 'POST',
+        body: JSON.stringify(newReview)
+      }).then(function(data){
+        return data.json();
+      }).then(function(review){
+        console.log('Review stored at remote server as well!');
+      }).catch(function(err) {
+        const error = (`Request failed. Error : ${err}`);
+        callback(error, null);
+      });
+    } else {
+      console.log("We're offline, so adding reviews remotely will have to wait...");
+    }
+
+  }
+
   // fetch all reviews
   static fetchReviews(callback) {
     let xhr = new XMLHttpRequest();
@@ -242,12 +280,9 @@ class DBHelper {
 
         // store a copy of the restaurant reviews data in indexeddb
         console.log('[IDB] Ready to store reviews data');
-        DBHelper.dbPromise.then(function(db){
-          let tx = db.transaction('reviews','readwrite');
-          let reviewsObjectStore = tx.objectStore('reviews');
-          reviews.forEach(function(review){
-            reviewsObjectStore.put(review);
-          });
+
+        reviews.forEach(function(review){
+          DBHelper.storeReviewInIdb(review);
         });
 
         callback(null, reviews);
@@ -295,8 +330,6 @@ class DBHelper {
    */
   static toggleFavoriteRestaurant(restaurant, callback){
 
-    console.log(restaurant);
-
     // update local storage first
     // restaurant.is_favorite has allready been updated
     DBHelper.storeRestaurantInIdb(restaurant);
@@ -319,8 +352,6 @@ class DBHelper {
     } else {
       console.log("We're offline, so altering the favorite restaurant remotely will have to wait...");
     }
-
-    // alter button icon, text and aria data OR reload the page?
 
   }
 

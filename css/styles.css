@@ -445,9 +445,9 @@ nav h1 a {
   padding: 2rem;
 }
 
-#addreview-container #review-author,
+#addreview-container #review-name,
 #addreview-container #review-rating,
-#addreview-container #review-comment,
+#addreview-container #review-comments,
 #addreview-container #review-button
  {
   width: 100%;
