@@ -36,10 +36,12 @@ window.initMap = () => {
       favButton.addEventListener("click", function(){
         console.log('Favorite button clicked');
         console.log('Favorite was '+restaurant.is_favorite);
-        if(restaurant.is_favorite==='false'){
-          restaurant.is_favorite = 'true';
+        if( restaurant.is_favorite==='false' 
+            || restaurant.is_favorite===false
+          ){
+            restaurant.is_favorite = 'true';
         } else {
-          restaurant.is_favorite = 'false';
+            restaurant.is_favorite = 'false';
         }
         console.log('Favorite is now '+restaurant.is_favorite);
         DBHelper.toggleFavoriteRestaurant(restaurant, logError);
