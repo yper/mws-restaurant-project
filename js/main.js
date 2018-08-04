@@ -112,8 +112,10 @@ resetRestaurants = (restaurants) => {
   ul.innerHTML = '';
 
   // Remove all map markers
-  if(self.markers){
-    self.markers.forEach(m => m.setMap(null));
+  if(typeof(google)!= 'undefined'){
+    if(self.markers){
+      self.markers.forEach(m => m.setMap(null));
+    }
   }
   self.markers = [];
   self.restaurants = restaurants;
@@ -133,7 +135,8 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   lazyLoad();
   
   // add markers to the map
-  addMarkersToMap();
+  //addMarkersToMap();
+  
 }
 
 /**
