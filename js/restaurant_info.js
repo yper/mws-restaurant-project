@@ -63,19 +63,24 @@ window.initMap = () => {
         }
 
         // add in local indexeddb
-        DBHelper.storeReviewInIdb(newReview)
-        .then(function(data){
-          console.log(data);
-          return data;
-        }).then(function(review){
+        if(DBHelper.storeReviewInIdb(newReview)){
           console.log('[IDB] New review added');
-          //self.restaurant.reviews.push(review);
+          // add in remote db
           DBHelper.storeReviewRemote(newReview,logError);
-
-        }).catch(function(err) {
-          const error = (`Request failed. Error : ${err}`);
+          // show the reviews
+          fetchRestaurantFromURL((error, restaurant) => {
+            if (error) { // Got an error!
+              console.log(error);
+            } else {
+              fetchReviewsFromRid((error, reviews) => {
+                if (error) { console.log(error); }   
+              });
+            }
+          });
+        } else {
+          const error = (`Request failed. New review could not be added.`);
           console.log(error);
-        });
+        }
 
       })
       
@@ -176,10 +181,12 @@ fetchReviewsFromRid = (callback) => {
   DBHelper.fetchReviewsByRestaurantId(rid, (error, reviews) => {
     console.log('[IDB] Get reviews for this restaurant');
     self.restaurant.reviews = reviews;
+    /*
     if (!reviews) {
       console.log(error); // not really an error, just no reviews yet
       return;
     }
+    */
     fillReviewsHTML();
     callback(null, reviews)
   });
@@ -210,9 +217,6 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
 
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -221,6 +225,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
+  ul.innerHTML = '';  // clear list first
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -293,6 +298,7 @@ getParameterByName = (name, url) => {
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function logError(error){
+function logError(error, somethingelse){
   console.log(error);
+  console.log(somethingelse);
 }
