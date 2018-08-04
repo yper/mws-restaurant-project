@@ -66,7 +66,11 @@ window.initMap = () => {
         if(DBHelper.storeReviewInIdb(newReview)){
           console.log('[IDB] New review added');
           // add in remote db
-          DBHelper.storeReviewRemote(newReview,logError);
+          DBHelper.storeReviewRemote(newReview, function(error, review){
+            if (error) { // Got an error!
+              console.log(error);
+            }
+          });
           // show the reviews
           fetchRestaurantFromURL((error, restaurant) => {
             if (error) { // Got an error!
@@ -181,12 +185,6 @@ fetchReviewsFromRid = (callback) => {
   DBHelper.fetchReviewsByRestaurantId(rid, (error, reviews) => {
     console.log('[IDB] Get reviews for this restaurant');
     self.restaurant.reviews = reviews;
-    /*
-    if (!reviews) {
-      console.log(error); // not really an error, just no reviews yet
-      return;
-    }
-    */
     fillReviewsHTML();
     callback(null, reviews)
   });

@@ -19,11 +19,13 @@ class DBHelper {
   }
 
   static get dbPromise(){
-    return idb.open('restoDB',2,function(upgradeDB){
+    return idb.open('restoDB',3,function(upgradeDB){
       let restaurantObjectStore = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
       restaurantObjectStore.createIndex('id','id');
       let reviewsObjectStore = upgradeDB.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true});
       reviewsObjectStore.createIndex('id','id');
+      let tosyncObjectStore = upgradeDB.createObjectStore('tosync', {keyPath: 'id', autoIncrement: true});
+      tosyncObjectStore.createIndex('id','id');
     });
   }
 
@@ -241,6 +243,19 @@ class DBHelper {
   }
 
   /**
+   * Add restaurant review in local IndexedDB so sync remote later
+   */
+  static storeTosyncReviewInIdb(review) {
+		return DBHelper.dbPromise.then(function(db) {
+      let tx = db.transaction('tosync', 'readwrite');
+      let tosyncObjectStore = tx.objectStore('tosync');
+      tosyncObjectStore.put(review);
+      return tx.complete;
+    });
+  }
+  
+
+  /**
    * Store a review on remote server
    * 
    * NOTE: server returns only 30 reviews in total, so to check
@@ -255,20 +270,64 @@ class DBHelper {
       }).then(function(data){
         return data.json();
       }).then(function(review){
-        console.log('Review stored at remote server as well!');
+        callback(null, review);
       }).catch(function(err) {
         const error = (`Request failed. Error : ${err}`);
+        DBHelper.storeTosyncReviewInIdb(newReview);
         callback(error, null);
       });
     } else {
       console.log("We're offline, so adding reviews remotely will have to wait...");
+      DBHelper.storeTosyncReviewInIdb(newReview);
     }
 
+  }
+
+  static syncReviewRemote(newReview, callback){
+    fetch('http://localhost:1337/reviews/', {
+      method: 'POST',
+      body: JSON.stringify(newReview)
+    }).then(function(data){
+      return data.json();
+    }).then(function(review){
+      callback(null, review);
+    }).catch(function(err) {
+      const error = (`Request failed. Error : ${err}`);
+      callback(error, null);
+    });
   }
 
   // fetch all reviews
   static fetchReviews(callback) {
     let xhr = new XMLHttpRequest();
+
+    // check whether there are reviews to be synced to the remote server
+    DBHelper.dbPromise.then(function(db){
+      let tx = db.transaction('tosync');
+      let tosyncObjectStore = tx.objectStore('tosync');
+      return tosyncObjectStore.getAll();
+    }).then(function(reviews){
+      reviews.forEach(function(review){
+        console.log('[IDB] Review needs to be synced to remote server');
+        let tempId = review.id;
+        delete review.id; // remote server hands out its own id's
+        DBHelper.syncReviewRemote(review, function(error, review){
+          if (error) {
+            console.log('[XHR] Review could not be synced to remote server. Trying again next time.')
+          } else {
+            console.log('[XHR] Review synced to remote server.')
+            // delete local entry
+            DBHelper.dbPromise.then(function(db){
+              let tx = db.transaction('tosync', 'readwrite');
+              let tosyncObjectStore = tx.objectStore('tosync');
+              tosyncObjectStore.delete(tempId);
+            });
+            console.log('[IDB] Review removed from tosync objectstore.')
+          }          
+        });
+      });
+    });
+
 
     console.log('[XHR] Reviews getting fetched at ' + DBHelper.REVIEWS_URL);
 
@@ -292,7 +351,8 @@ class DBHelper {
         callback(error, null);
 
       }
-    };
+    }; 
+
     xhr.onreadystatechange=function() {
       if ((xhr.readyState === 4) && (xhr.status !== 200)){  // done but not OK (!=200)
         console.log('[XHR] Reviews cannot be fetched at ' + DBHelper.REVIEWS_URL + '. Revert to local copy instead!');
@@ -306,6 +366,7 @@ class DBHelper {
           callback(null, reviews);
         });
       } 
+
     }    
     xhr.send();
   }
