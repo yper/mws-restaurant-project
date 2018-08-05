@@ -71,6 +71,10 @@ window.initMap = () => {
               console.log(error);
             }
           });
+          // clear the form inputs
+          document.getElementById('review-comments').value = '';
+          document.getElementById('review-name').value = '';
+
           // show the reviews
           fetchRestaurantFromURL((error, restaurant) => {
             if (error) { // Got an error!
