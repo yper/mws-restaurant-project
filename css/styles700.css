@@ -1,0 +1,24 @@
+@media screen and (min-width: 700px){
+  
+  h1 {
+    font-size: 2.4rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .flexbox-item {
+    width: 49%;
+  }
+
+  .nav-filter {
+    position: relative;
+    transform: translate(0,0);
+  }
+
+  nav h1 a {
+    font-size: 2.4rem;
+    letter-spacing: 0.8rem;
+  }  
+}

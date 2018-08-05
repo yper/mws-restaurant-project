@@ -22,15 +22,7 @@ function pageReady(callback){
   });
 }
 
-pageReady(function(){
-  console.log('Page is ready, let\'s throw in some javascript');
 
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&&libraries=places&callback=initMap';
-  document.body.appendChild(script);
-  initPage();   // carry out page specific initializations, found in js file of that page
-});
 
 
 /*
@@ -92,3 +84,14 @@ function registerListener(event, func) {
         window.attachEvent('on' + event, func)
     }
 }
+
+
+pageReady(function(){
+    console.log('Page is ready, let\'s throw in some javascript');
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCcOjsLNFrzEgI0diLs8hmpNxw8e7lr5YU&&libraries=places&callback=initMap';
+    //script.defer = true;
+    document.body.appendChild(script);
+    initPage();   // carry out page specific initializations, found in js file of that page
+  });
